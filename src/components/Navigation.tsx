@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { asset } from "@/lib/asset";
 
-const navItems = [
+const sectionLinks = [
   { label: "O mnie", href: "#about" },
   { label: "Edukacja", href: "#education" },
   { label: "Doświadczenie", href: "#experience" },
@@ -17,12 +18,23 @@ const navItems = [
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const galleryHref = asset("/galeria/");
+  const navItems = [
+    ...sectionLinks.map((item) => ({
+      ...item,
+      href: isHome ? item.href : `${asset("/")}${item.href}`,
+    })),
+    { label: "Galeria", href: galleryHref },
+  ];
 
   return (
     <nav
@@ -33,7 +45,7 @@ export function Navigation() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-3">
+        <a href={asset("/")} className="flex items-center gap-3">
           <Image
             src={asset("/images/LOGO M.CH. BIAŁE.png")}
             alt="M.CH."
@@ -51,7 +63,11 @@ export function Navigation() {
             <a
               key={item.href}
               href={item.href}
-              className="text-cream/70 hover:text-earth text-sm tracking-[0.15em] uppercase transition-all duration-300 relative group"
+              className={`text-sm tracking-[0.15em] uppercase transition-all duration-300 relative group ${
+                item.href === galleryHref && pathname.startsWith("/galeria")
+                  ? "text-earth"
+                  : "text-cream/70 hover:text-earth"
+              }`}
             >
               {item.label}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-earth transition-all duration-300 group-hover:w-full" />
@@ -82,7 +98,11 @@ export function Navigation() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="text-cream/70 hover:text-earth text-sm tracking-[0.15em] uppercase transition-colors"
+                  className={`text-sm tracking-[0.15em] uppercase transition-colors ${
+                    item.href === galleryHref && pathname.startsWith("/galeria")
+                      ? "text-earth"
+                      : "text-cream/70 hover:text-earth"
+                  }`}
                 >
                   {item.label}
                 </a>

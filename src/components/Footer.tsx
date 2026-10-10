@@ -28,6 +28,12 @@ export function Footer() {
             Facebook
           </a>
           <a
+            href={asset("/galeria/")}
+            className="text-cream/30 hover:text-earth text-xs tracking-[0.15em] uppercase transition-colors"
+          >
+            Galeria
+          </a>
+          <a
             href="https://www.youtube.com/@_mikolaj_jestem_"
             target="_blank"
             rel="noopener noreferrer"

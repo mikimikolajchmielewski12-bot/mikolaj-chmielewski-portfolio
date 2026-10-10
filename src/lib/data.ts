@@ -55,14 +55,37 @@ export interface Trip {
   image: string;
 }
 
+export interface InstagramCategory {
+  id: string;
+  label: string;
+}
+
+export interface InstagramPost {
+  id: string;
+  image: string;
+  type: "post" | "reel";
+  category: string;
+  date: string;
+  title: string;
+  caption: string;
+  link: string;
+}
+
+export interface InstagramData {
+  categories: InstagramCategory[];
+  posts: InstagramPost[];
+}
+
 import profileData from "@/data/profile.json";
 import educationData from "@/data/education.json";
 import experienceData from "@/data/experience.json";
 import achievementsData from "@/data/achievements.json";
 import tripsData from "@/data/trips.json";
+import instagramData from "@/data/instagram.json";
 
 export const profile = profileData as Profile;
 export const education = educationData as Education[];
 export const experience = experienceData as Experience[];
 export const achievements = achievementsData as Achievement[];
 export const trips = tripsData as Trip[];
+export const instagram = instagramData as InstagramData;
