@@ -69,6 +69,8 @@ export interface InstagramPost {
   title: string;
   caption: string;
   link: string;
+  width: number;
+  height: number;
 }
 
 export interface InstagramData {

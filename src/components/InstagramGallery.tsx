@@ -67,18 +67,18 @@ export function InstagramGallery({ posts, categories }: InstagramGalleryProps) {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <AnimatePresence mode="popLayout">
+      <div className="columns-1 sm:columns-2 lg:columns-3 gap-5">
+        <AnimatePresence>
           {filtered.map((post, index) => (
             <motion.button
               key={post.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4 }}
               onClick={() => setLightbox(index)}
-              className="relative aspect-square overflow-hidden rounded-2xl border border-earth/15 group text-left"
+              className="relative w-full mb-5 break-inside-avoid overflow-hidden rounded-2xl border border-earth/15 group text-left block"
+              style={{ aspectRatio: `${post.width}/${post.height}` }}
             >
               <Image
                 src={asset(post.image)}
@@ -90,6 +90,13 @@ export function InstagramGallery({ posts, categories }: InstagramGalleryProps) {
               {post.type === "reel" && (
                 <span className="absolute top-3 left-3 z-10 bg-black/70 backdrop-blur px-2 py-0.5 text-[9px] tracking-[0.2em] uppercase text-earth-light border border-earth/30">
                   Reel
+                </span>
+              )}
+              {post.type === "reel" && (
+                <span className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+                  <span className="flex items-center justify-center w-14 h-14 rounded-full bg-black/50 backdrop-blur border border-earth-light/40 text-earth-light text-xl transition-transform duration-500 group-hover:scale-110">
+                    ▶
+                  </span>
                 </span>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">
@@ -148,26 +155,42 @@ export function InstagramGallery({ posts, categories }: InstagramGalleryProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.35 }}
-              className="relative w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col lg:flex-row bg-black border border-earth/20 rounded-2xl"
+              className="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-black border border-earth/20 rounded-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative lg:w-1/2 aspect-square lg:aspect-auto lg:min-h-[420px] bg-charcoal/20">
-                <Image
-                  src={asset(current.image)}
-                  alt={current.title}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover"
-                />
-                {current.type === "reel" && (
-                  <span className="absolute top-3 left-3 z-10 bg-black/70 backdrop-blur px-2 py-0.5 text-[9px] tracking-[0.2em] uppercase text-earth-light border border-earth/30">
-                    Reel
-                  </span>
-                )}
-              </div>
-              <div className="px-6 py-6 overflow-y-auto flex flex-col lg:w-1/2">
-                <span className="text-[10px] tracking-[0.2em] uppercase text-earth-light mb-2">
+              {current.type === "reel" ? (
+                <div
+                  className="relative w-full bg-black"
+                  style={{ aspectRatio: "9/16", maxHeight: "58vh" }}
+                >
+                  <iframe
+                    src={`https://www.instagram.com/reel/${current.id}/embed/`}
+                    className="absolute inset-0 w-full h-full"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowTransparency
+                    loading="lazy"
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title={current.title}
+                  />
+                </div>
+              ) : (
+                <div className="relative w-full bg-black flex items-center justify-center" style={{ maxHeight: "60vh" }}>
+                  <Image
+                    src={asset(current.image)}
+                    alt={current.title}
+                    width={current.width}
+                    height={current.height}
+                    priority
+                    sizes="(max-width: 768px) 100vw, 48rem"
+                    className="w-auto h-auto max-w-full max-h-[60vh] object-contain"
+                  />
+                </div>
+              )}
+
+              <div className="px-6 py-6">
+                <span className="text-[10px] tracking-[0.2em] uppercase text-earth-light mb-2 inline-block">
                   {formatDate(current.date)}
                 </span>
                 <h3 className="text-2xl text-cream uppercase tracking-[0.1em] leading-tight mb-4">
@@ -180,7 +203,7 @@ export function InstagramGallery({ posts, categories }: InstagramGalleryProps) {
                 ) : (
                   <p className="text-cream/40 text-sm italic">Brak opisu.</p>
                 )}
-                <div className="flex items-center gap-4 mt-6 pt-4 border-t border-earth/15">
+                <div className="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-earth/15">
                   <a
                     href={current.link}
                     target="_blank"
